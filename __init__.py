@@ -1,9 +1,6 @@
 import numpy as np
 from datasets import get_emoji_data
 import matplotlib.pyplot as plt
-from matplotlib import style
-
-style.use('fivethirtyeight')
 
 emoji_data = get_emoji_data()
 emoji_data_processed = process_emoji_daeta()
