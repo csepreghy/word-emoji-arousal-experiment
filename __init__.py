@@ -1,5 +1,5 @@
 import numpy as np
-from datasets import get_emoji_data
+from src.datasets import get_emoji_data
 import pandas as pd
 import matplotlib.pyplot as plt
 
