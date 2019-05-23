@@ -21,7 +21,7 @@ def assemble_word_data(word_ratings, freq_1, freq_2, add_letter_count=True, drop
     word_ratings = word_ratings.rename(columns={"Word":"word", "A.Mean.Sum":"a_mean", "V.Mean.Sum":"v_mean"})
 
     # iterate over over word and its index
-    for i, word in word_ratings.loc[:,"Word"].iteritems():
+    for i, word in word_ratings.loc[:,"word"].iteritems():
         # iterate over every row as a tuple
         for rowtuple in freq_1.itertuples():
             #w = rowtuple[1]
@@ -46,9 +46,7 @@ def assemble_word_data(word_ratings, freq_1, freq_2, add_letter_count=True, drop
     
     # add number of letters for every word
     if add_letter_count:
-        word_ratings["letter_count"] = np.nan
-        for i, word in word_ratings.loc[:,"word"].iteritems():
-            word_ratings.loc[i, "letter_count"] = len(word)
+        word_ratings["letter_count"] = word_ratings.word.apply(len)
 
     return word_ratings
 
