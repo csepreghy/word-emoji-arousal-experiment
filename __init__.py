@@ -17,6 +17,7 @@ word_freq2_data = get_word_freq2_data()
 #emoji_data = get_emoji_data()
 
 word_rating_data_processed = process_word_ratings(word_rating_data)
+print('word_rating_data_processed', word_rating_data_processed)
 
 # runtime = 10 mins!
 word_clean = assemble_word_data(word_rating_data_processed, word_freq1_data, word_freq2_data, add_letter_count=False, dropNaN=False)
