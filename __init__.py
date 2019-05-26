@@ -1,34 +1,44 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-from src.import_datasets import get_word_rating_data, get_word_freq1_data, get_word_freq2_data, get_emoji_data
+from src.import_datasets import get_word_rating_data, get_word_freq1_data, get_word_freq2_data, get_emoji_data, get_csv_df
 from process_data import process_word_ratings, assemble_word_data, split_by_arousal
-from analyze_data import center_and_scale
-from sklearn.decomposition import PCA
+from analyze_data import center_and_scale, find_word_combs, calc_dists
 
-word_rating_data = get_word_rating_data()
-word_freq1_data = get_word_freq1_data()
-#print(word_freq1_data.head())
-word_freq2_data = get_word_freq2_data()
-#print(type(word_freq2_data))
-#freq_2 = word_freq2_data.reset_index(inplace=True)
-#print(word_freq2_data.head())
-#emoji_data = get_emoji_data()
+# import data
+# word_rating_data = get_word_rating_data()
+# word_freq1_data = get_word_freq1_data()
+# word_freq2_data = get_word_freq2_data()
+# emoji_data = get_emoji_data()
 
-word_rating_data_processed = process_word_ratings(word_rating_data)
-print('word_rating_data_processed', word_rating_data_processed)
+# preprocess data
+# word_rating_data_processed = process_word_ratings(word_rating_data)
+# words_with_freqs = assemble_word_data(word_rating_data_processed, word_freq1_data, word_freq2_data, add_letter_count=True, dropNaN=True)
 
-# runtime = 10 mins!
-word_clean = assemble_word_data(word_rating_data_processed, word_freq1_data, word_freq2_data, add_letter_count=False, dropNaN=False)
-print(word_clean.head())
+# save intermediate data
+# words_with_freqs.to_csv("../datasets/words_with_freqs.csv")
+
+# import intermediate data
+# words_with_freqs = get_csv_df("../datasets/words_with freqs.csv")
+
+# normalize and scale each group/whole set
+# words_with_freqs = center_and_scale(words_with_freqs)
 
 # split dataset by top, middle and lowest arousal words
-# high_arousal, med_arousal, low_arousal = split_by_arousal(word_clean, stdnum=2, show_stats=True)
+# high_arousal, med_arousal, low_arousal = split_by_arousal(words_with_freqs, stdnum=2.25, show_stats=False)
 
-# print(high_arousal.head(), high_arousal.shape)
-# print(med_arousal.head(), med_arousal.shape)
-# print(low_arousal.head(), low_arousal.shape)
+# find close word combinations - 2,5 million!
+# word_combs = find_word_combs(high_arousal, med_arousal, low_arousal)
 
-# normalize and scale each group
-# high_scaled, med_scaled, low_scaled = center_and_scale(high_arousal), center_and_scale(med_arousal), center_and_scale(low_arousal)
+# calculate distances between combinations
+# combs_with_dists = calc_dists(word_combs)
+
+# save distances to csv
+# combs_with_dists.to_csv("../datasets/combs_with_dists_225_std.csv")
+
+# load distances file
+# combs_with_dists = get_csv_df("../datasets/combs_with_dists_225_std.csv")
+
+# show word groups with shortest distances
+df = get_csv_df("../datasets/combs_with_dists_25_std.csv"
+print(df.nsmallest(100, "avg_dist"))
