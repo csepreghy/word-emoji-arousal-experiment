@@ -51,7 +51,29 @@ def assemble_word_data(word_ratings, freq_1, freq_2, add_letter_count=True, drop
 
     return word_ratings
 
-def split_by_arousal(dataset, stdnum, show_stats=True):
+def split_by_asl_and_val(dataset, stdnum, show_stats=True):
+    if show_stats:
+        print("Descriptive statistics of dataset: \n", dataset.describe())
+    
+    # get means and standard deviations
+    a_mean = dataset.describe().a_mean[1]
+    a_std = dataset.describe().a_mean[2]
+    v_mean = dataset.describe().v_mean[1]
+    v_std = dataset.describe().v_mean[2]
+    print(v_mean, v_std)
+    
+    # return dataframe where a_mean values are two standard deviations over mean
+    asl_high_val_high = dataset[(dataset.a_mean >= (a_mean + a_std * stdnum)) & (dataset.v_mean >= (v_mean + v_std*stdnum))]
+    asl_med_val_high = dataset[((dataset.a_mean <= (a_mean + a_std)) & (dataset.a_mean >= (a_mean - a_std))) & (dataset.v_mean >= (v_mean + v_std*stdnum))]
+    asl_low_val_high = dataset[(dataset.a_mean <= (a_mean - a_std * stdnum)) & (dataset.v_mean >= (v_mean + v_std*stdnum))]
+    
+    asl_high_val_low = dataset[(dataset.a_mean >= (a_mean + a_std * stdnum)) & (dataset.v_mean <= (v_mean - v_std*stdnum))]
+    asl_med_val_low = dataset[(dataset.a_mean <= (a_mean + a_std)) & (dataset.a_mean >= (a_mean - a_std)) & (dataset.v_mean <= (v_mean - v_std*stdnum))]
+    asl_low_val_low = dataset[(dataset.a_mean <= (a_mean - a_std * stdnum)) & (dataset.v_mean <= (v_mean - v_std*stdnum))]
+    
+    return asl_high_val_high, asl_med_val_high, asl_low_val_high, asl_high_val_low, asl_med_val_low, asl_low_val_low
+
+def split_by_asl(dataset, stdnum, show_stats=True):
     if show_stats:
         print("Descriptive statistics of dataset: \n", dataset.describe())
     
@@ -60,9 +82,8 @@ def split_by_arousal(dataset, stdnum, show_stats=True):
     std = dataset.describe().a_mean[2]
     
     # return dataframe where a_mean values are two standard deviations over mean
-    group_high = dataset[dataset.a_mean >= (mean + std * stdnum)]
-    group_med = dataset[(dataset.a_mean <= (mean + std)) & (dataset.a_mean >= (mean - std))]
-    group_low = dataset[dataset.a_mean <= (mean - std * stdnum)]
+    high = dataset[(dataset.a_mean >= (mean + std * stdnum))]
+    med = dataset[(dataset.a_mean <= (mean + std)) & (dataset.a_mean >= (mean - std))]
+    low = dataset[(dataset.a_mean <= (mean - std * stdnum))]
 
-    return group_high, group_med, group_low
-    
+    return high, med, low

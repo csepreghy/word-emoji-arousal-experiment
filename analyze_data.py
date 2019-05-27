@@ -36,5 +36,6 @@ def calc_dists(combs):
         row_dicts.append(dict1)
 
     data = pd.DataFrame(row_dicts, columns=["word_high", "word_med", "word_low", "avg_dist"])
+    data.loc[:, "avg_dist"] = pd.to_numeric(data.loc[:, "avg_dist"], errors="coerce")
 
     return data
